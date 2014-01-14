@@ -131,7 +131,6 @@
 ;; Produce next game state by advancing all comets by vel,  
 ;; ship by SSPEED, and score by SCORE-RATE
 
-;(define (tock-game g) g)  ;stub
 (define (tock-game g)
     (make-game
      (tock-ship (game-ship g)) 
@@ -140,8 +139,6 @@
       (add-comets (game-score g) (tock-loc (game-loc g)))) 
      (tock-score (game-score g))))
 
-;; (listof Comet) -> Boolean
-;; Produces true if a comet c is overlapping with another
 
 ;; Score (listof Comet) -> (listofComet)
 ;; Randomly adds comets to loc based on given score s
@@ -183,7 +180,6 @@
               (make-ship (+ 100 SSPEED) 100 "right"))
 (check-expect (tock-ship (make-ship 100 100 "down")) 
               (make-ship 100 (+ 100 SSPEED) "down"))  
-;(define (tock-ship s) s) ;stub 
 (define (tock-ship s)
   (cond [(string=? (ship-dir s) "left") 
          (make-ship (- (ship-x s) SSPEED) (ship-y s) (ship-dir s))]
@@ -203,7 +199,6 @@
               (list (make-comet 100 (+ 100 5) 5)))
 (check-expect (tock-loc (list (make-comet 100 100 10) (make-comet 200 200 10)))
               (list (make-comet 100 (+ 100 10) 10) (make-comet 200 (+ 200 10) 10)))
-;(define (tock-loc loc) empty) ;stub
 (define (tock-loc loc)
   (local [(define (tock-comet c)
             (make-comet (comet-x c) 
@@ -215,7 +210,6 @@
 ;; Advances the Score by 1 point per tick
 (check-expect (tock-score 0) (+ SCORE-RATE 0))
 (check-expect (tock-score 500) (+ SCORE-RATE 500))
-
 (define (tock-score s)
   (+ SCORE-RATE s))
 
@@ -238,7 +232,6 @@
                                          (render-loc (list
                                                       (make-comet 100 100 10)
                                                       (make-comet 400 400 10))))))
-;(define (render-game g) MTS) 
 (define (render-game g)
   (render-ship 
    (game-ship g)
@@ -253,7 +246,6 @@
               (place-image SHIP-IMG 200 500 MTS))
 (check-expect (render-ship (make-ship 200 500 "left") MTS)
               (place-image MOVING-SHIP-IMG 200 500 MTS))
-
 (define (render-ship s img)
   (if 
    (string=? "none" (ship-dir s))
@@ -294,7 +286,6 @@
                            (render-loc (list (make-comet 400 400 10)
                                              (make-comet 250 250 10)))))
 
-;(define (render-loc loc) MTS) ;stub 
 (define (render-loc loc)
   (cond [(empty? loc) MTS]
         [else
@@ -464,7 +455,6 @@
                            100))
               true)
 
-;(define (game-over? g) true) ;stub
 (define (game-over? g)
   (local [(define (collision? c)
             (and
@@ -481,6 +471,8 @@
       (+ (ship-x (game-ship g)) (/ (image-width SHIP-IMG) 2)) WIDTH)
      (ormap collision? (game-loc g)))))
 
+;; Game -> Image
+;; Displays the game-over screen with final score
 (define (game-over-display g)
   (overlay
    (above 
