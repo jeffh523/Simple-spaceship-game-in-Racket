@@ -489,5 +489,5 @@
    (render-game g))) 
 
 
-
+(main (make-game (make-ship 300 550 "none") empty 0))   ; initializes game
 
