@@ -116,7 +116,7 @@
 ;;========================
 
 ;; Game -> Game
-;; start the world with initial state s, for example: (main (make-ship (/ WIDTH 2) (/ HEIGHT 2)))
+;; start the world with initial state g, for example: (main (make-game (make-ship 300 550 "none") empty 0)) 
 (define (main g)
   (big-bang g                                             ; Game 
             (on-tick     tock-game)                       ; Game -> Game 
