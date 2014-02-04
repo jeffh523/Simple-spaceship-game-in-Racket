@@ -102,7 +102,7 @@
 (define G1 (make-game
             (make-ship (/ WIDTH 2) 
                        (* HEIGHT .92) 
-                       "none")  ; a game with ship near center-bottom and 1 comet on sreen
+                       "none")  ; a game with ship near center-bottom and 1 comet on screen
             (list C1)
             100))
 #;
