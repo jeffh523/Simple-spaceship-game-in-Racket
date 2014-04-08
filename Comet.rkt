@@ -20,8 +20,8 @@
 (define STAGE4-CSPEED 14) ;comet speed after score = 3000
 (define STAGE5-CSPEED 16) ;comet speed for score > 4000
 
-(define SSPEED 5) 
-(define SCORE-RATE 1)
+(define SSPEED 5)         ;ship speed
+(define SCORE-RATE 1)     ;score increase rate (points/tick)
 (define SHIP-IMG (above
                   (triangle 30 "solid" "green")
                   (beside
@@ -128,14 +128,14 @@
 
 
 ;; Game -> Game
-;; Produce next game state by advancing all comets by vel,  
+;; Produce next game state by adding comets, advancing all comets by vel,  
 ;; ship by SSPEED, and score by SCORE-RATE
 
 (define (tock-game g)
     (make-game
      (tock-ship (game-ship g)) 
      (filter 
-      (lambda (c) (< (comet-y c) HEIGHT)) 
+      (lambda (c) (< (comet-y c) HEIGHT))    ;garbage collection (removes below-screen comets)  
       (add-comets (game-score g) (tock-loc (game-loc g)))) 
      (tock-score (game-score g))))
 
@@ -456,7 +456,7 @@
               true)
 
 (define (game-over? g)
-  (local [(define (collision? c)
+  (local [(define (collision? c) ;produces true if comet is colliding with ship
             (and
              (< 
               (abs (- (ship-x (game-ship g)) (comet-x c))) 
@@ -467,8 +467,8 @@
     (or
      (< 
       (- (ship-x (game-ship g)) (/ (image-width SHIP-IMG) 2)) 0) 
-     (> 
-      (+ (ship-x (game-ship g)) (/ (image-width SHIP-IMG) 2)) WIDTH)
+     (>                                                              ;check if ship-x off-screen
+      (+ (ship-x (game-ship g)) (/ (image-width SHIP-IMG) 2)) WIDTH)  
      (ormap collision? (game-loc g)))))
 
 ;; Game -> Image
