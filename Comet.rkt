@@ -1,5 +1,6 @@
 (require 2htdp/universe)
 (require 2htdp/image)
+(require racket/list)
 
 ;; A simple spaceship game
 ;;=========================
@@ -134,11 +135,30 @@
 (define (tock-game g)
     (make-game
      (tock-ship (game-ship g)) 
-     (filter 
-      (lambda (c) (< (comet-y c) HEIGHT))    ;garbage collection (removes below-screen comets)  
-      (add-comets (game-score g) (tock-loc (game-loc g)))) 
+     (remove-duplicates                       ;remove overlapping comets
+      (filter 
+       (lambda (c) (< (comet-y c) HEIGHT))    ;garbage collection (removes below-screen comets)  
+       (add-comets (game-score g) (tock-loc (game-loc g))))
+      colliding?) 
      (tock-score (game-score g))))
 
+
+;; Comet Comet -> Boolean
+;; Produces true if two comets are colliding
+(check-expect (colliding? (make-comet 100 100 10) 
+                          (make-comet 102 101 10))
+              true)
+(check-expect (colliding? (make-comet 100 100 10)
+                          (make-comet 140 140 10))
+              false)
+(define (colliding? c1 c2) 
+  (and
+   (< 
+    (abs (- (comet-x c1) (comet-x c2))) 
+    (+ (/ (image-width COMET-IMG) 2) 8))  ;add 8 to give a little margin such that
+   (< 
+    (abs (- (comet-y c1) (comet-y c2)))   ;comets always spawn with some space between
+    (+ (/ (image-width COMET-IMG) 2) 8))))
 
 ;; Score (listof Comet) -> (listofComet)
 ;; Randomly adds comets to loc based on given score s
